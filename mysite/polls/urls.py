@@ -1,5 +1,6 @@
 from django.urls import path
-
+from django.http import HttpResponse
+from .models import Question
 from . import views
 
 urlpatterns = [
@@ -12,3 +13,10 @@ urlpatterns = [
     # ex: /polls/5/vote/
     path('<int:question_id>/vote/', views.vote, name='vote'),
 ]
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ', '.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
+
+# Leave the rest of the views (detail, results, vote) unchanged
